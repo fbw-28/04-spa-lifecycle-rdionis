@@ -5,6 +5,7 @@ export default class Search extends Component {
   state = {
     users: [],
     originalUsers: [],
+    showTable: false,
   };
 
   fetchData = async () => {
@@ -21,11 +22,13 @@ export default class Search extends Component {
   static getDerivedStateFromProps(props, state) {
     //because this is a static method, we don't use the "this" keyword
     if (props.searchValue !== "") {
-      state.users = state.users.filter((user) =>
+      state.users = state.originalUsers.filter((user) =>
         user.name.toLowerCase().includes(props.searchValue.toLowerCase())
       );
+      state.showTable = true;
     } else {
       state.users = state.originalUsers;
+      state.showTable = false;
     }
     return state.users;
   }
@@ -41,16 +44,18 @@ export default class Search extends Component {
 
     return (
       <div>
-        <table>
-          <thead>
-            <tr>
-              <th>User ID</th>
-              <th>Username</th>
-              <th>User Email</th>
-            </tr>
-          </thead>
-          <tbody>{userData}</tbody>
-        </table>
+        {this.state.showTable ? (
+          <table>
+            <thead>
+              <tr>
+                <th>User ID</th>
+                <th>Username</th>
+                <th>User Email</th>
+              </tr>
+            </thead>
+            <tbody>{userData}</tbody>
+          </table>
+        ) : null}
       </div>
     );
   }
